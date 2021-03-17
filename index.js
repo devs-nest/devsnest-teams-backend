@@ -5,6 +5,7 @@ import cors from 'cors';
 
 //Route Imports
 import softskill from './route/softskill.js';
+import admin from './route/admin.js';
 
 // Configuration
 const app = express();
@@ -15,12 +16,13 @@ app.use(cors());
 // Routes
 const apiVersion = "/api/v1";
 app.use(`${apiVersion}/softskill`, softskill);
+app.use(`${apiVersion}/admin`, admin);
 
 const PORT = process.env.PORT || 5000;
 app.listen(PORT, () => {
     console.log(`Server started at port ${PORT}.`);
 });
 
-mongoose.connect(process.env.MONGO_URL, { useNewUrlParser: true, useUnifiedTopology: true })
+mongoose.connect(process.env.MONGO_URL, { useNewUrlParser: true, useUnifiedTopology: true, useFindAndModify: false })
 .then(() => console.log("MongoDB Connected."))
 .catch(() => console.log("Error in connecting MongoDB!"));

@@ -1,6 +1,4 @@
-import mongoose from 'mongoose';
-import softskillUserModel from '../module/softskillUser.js';
-import SoftskillUser from '../module/softskillUser.js';
+import SoftskillUser from '../module/SoftskillUser.js';
 
 export const general = async(req, res) => {
     try {
@@ -52,11 +50,11 @@ export const addUsers = async(req, res) => {
             user.presentation = 0   
         })
 
-        await softskillUserModel.deleteMany({});
+        await SoftskillUser.deleteMany({});
 
-        const Users = await softskillUserModel.insertMany(users);
+        const Users = await SoftskillUser.insertMany(users);
 
-        return res.status(200).json({message: "Users created.", data: Users});
+        return res.status(200).json({message: `${users.length} Users created.`, data: Users});
     } catch(error) {
         return res.status(404).json({message: error.message});
     }
@@ -64,9 +62,49 @@ export const addUsers = async(req, res) => {
 
 export const getUsers = async(req, res) => {
     try {
-        const users = await softskillUserModel.find({});
-        return res.status(200).json({message: "Users Delivered", data: users})
+        const users = await SoftskillUser.find({});
+        return res.status(200).json({message: `${users.length} Users Fetched`, data: users})
     } catch(error) {
+        return res.status(404).json({message: error.message});
+    }
+}
+
+export const updateScore = async(req, res) => {
+    try {
+        const { username, type, tag } = req.body;
+
+        if(!username || !type || !tag) {
+            return res.status(422).json({message: "Parameter Missing!"});
+        }
+
+        const user = await SoftskillUser.findOne({ username });
+
+        if(!user) {
+            return res.status(422).json({message: "Username Not Found!"});
+        }
+
+        if(tag === 'debate') {
+            await user.updateOne({$inc : {'debate' : type*2}});
+        } else if(tag === 'mockInterviewP') {
+            await user.updateOne({$inc : {'mockInterviewP' : type*4}});
+        } else if(tag === 'mockInterviewI') {
+            await user.updateOne({$inc : {'mockInterviewI' : type*5}});
+        } else if(tag === 'summarization') {
+            await user.updateOne({$inc : {'summarization' : type*4}});
+        } else if(tag === 'techsummarization') {
+            await user.updateOne({$inc : {'techsummarization' : type*6}});
+        } else if(tag === 'presentation') {
+            await user.updateOne({$inc : {'presentation' : type*10}});
+        } else {
+            return res.status(422).json({message: "Invalid Tag!"});
+        }
+
+        const data = await SoftskillUser.findOne({ username });
+
+        return res.status(200).json({message: `Score Updated of user ${username} for ${tag} [${type}].`, data});
+
+    } catch(error) {
+        console.log(error);
         return res.status(404).json({message: error.message});
     }
 }

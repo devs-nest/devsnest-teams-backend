@@ -6,8 +6,7 @@ const softskillUserSchema = mongoose.Schema({
         required: [true, 'UserName is Required']
     },
     userid: {
-        type: String,
-        required: [true, 'UserID is Required']
+        type: String
     },
     debate: {
         type: Number
