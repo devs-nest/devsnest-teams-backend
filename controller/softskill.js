@@ -1,4 +1,4 @@
-import SoftskillUser from '../module/SoftskillUser.js';
+import SoftskillUser from '../module/softskillUser.js';
 
 export const general = async(req, res) => {
     try {
