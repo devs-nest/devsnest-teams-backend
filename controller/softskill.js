@@ -83,18 +83,20 @@ export const updateScore = async(req, res) => {
             return res.status(422).json({message: "Username Not Found!"});
         }
 
+        const total = user.total;
+
         if(tag === 'debate') {
-            await user.updateOne({$inc : {'debate' : type*2}});
+            await user.updateOne({$inc : {'debate' : type*2}, total: total+(type*2)});
         } else if(tag === 'mockInterviewP') {
-            await user.updateOne({$inc : {'mockInterviewP' : type*4}});
+            await user.updateOne({$inc : {'mockInterviewP' : type*4}, total: total+(type*4)});
         } else if(tag === 'mockInterviewI') {
-            await user.updateOne({$inc : {'mockInterviewI' : type*5}});
+            await user.updateOne({$inc : {'mockInterviewI' : type*5}, total: total+(type*5)});
         } else if(tag === 'summarization') {
-            await user.updateOne({$inc : {'summarization' : type*4}});
+            await user.updateOne({$inc : {'summarization' : type*4}, total: total+(type*4)});
         } else if(tag === 'techsummarization') {
-            await user.updateOne({$inc : {'techsummarization' : type*6}});
+            await user.updateOne({$inc : {'techsummarization' : type*6}, total: total+(type*6)});
         } else if(tag === 'presentation') {
-            await user.updateOne({$inc : {'presentation' : type*10}});
+            await user.updateOne({$inc : {'presentation' : type*10}, total: total+(type*10)});
         } else {
             return res.status(422).json({message: "Invalid Tag!"});
         }
