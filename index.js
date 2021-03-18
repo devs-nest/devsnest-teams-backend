@@ -18,6 +18,11 @@ const apiVersion = "/api/v1";
 app.use(`${apiVersion}/softskill`, softskill);
 app.use(`${apiVersion}/admin`, admin);
 
+// URL Not Found
+app.use((req, res) => {
+    res.status(404).send({url: req.originalUrl + ' not found'})
+});
+
 const PORT = process.env.PORT || 5000;
 app.listen(PORT, () => {
     console.log(`Server started at port ${PORT}.`);
